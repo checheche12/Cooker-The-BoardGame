@@ -1,0 +1,10 @@
+<div>준비가 완료된 유저의 수 : </div><div id="readyuser">#{roomWaitingUser}</div>
+<div>방에 접속한 유저의 수 : </div><div id="alluser">#{alluser}</div>
+<input type="button" id="readybutton" value = "not ready" state = "notready" onclick="readyorcancle()">
+<input type="button" id="back" value = "go to lobby" onclick="back()">
+<table>
+<tr>
+<textarea rows="20" cols="30" id="chat"></textarea><br>
+<input type="text" id="user"><input type="button" value="msg submit" onclick="sendMessage()">
+</tr>
+</table>

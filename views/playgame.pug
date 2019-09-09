@@ -1,0 +1,22 @@
+<table class="gameboardtable">
+- var a = 0;
+while a < 12
+    - var b = 0;
+    <tr>
+    while b < 12
+        <td class="gameboardtd" row="#{a}" col="#{b}" onClick = "moveclick()" ></td>
+        - b++;
+    - a++;
+    </tr>
+</table>
+
+
+<div><div>시간</div><span id="timertimer">15.00</span></div>
+
+<table class="gameboardtable">
+  <tr>
+    <td class="gameboardtd"><button id = "diceplay" value = "DICE" onClick = "diceplay()"></button></td>
+    <td class="gameboardtd">가로로 이동 가능 : <div id ="dicerow"></div></td>
+    <td class="gameboardtd">세로로 이동 가능 : <div id ="dicecol"></div></td>
+  </tr>
+</table>

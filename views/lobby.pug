@@ -1,0 +1,15 @@
+body
+  p #{roomCount} 개의 방이 현재 개설되어 있습니다.
+  p #{nowPlayRoomCount} 개의 게임이 현재 플레이 되고 있습니다.
+  <table>
+    -for(property in roomList)
+      <tr>
+        <td><li> #{roomList[property]["roomName"]} </li></td>
+        <td><button id = "#{roomList[property]["roomNumber"]}" onclick="jointhisroom(this.id)" > Enter This Room!</button></td>
+      </tr>
+
+
+  <tr>
+    <td><button id="makeroom" onclick="makeroom()"> makeroom </button></td>
+  </tr>
+  </table>

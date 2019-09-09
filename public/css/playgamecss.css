@@ -1,0 +1,14 @@
+<style>
+  .gameboardtable{
+    table-layout:fixed;
+    border="5";
+    width="600";
+    height="600";
+  }
+  .gameboardtd{
+    table-layout:fixed;
+    width:50px;
+    height:50px;
+    border:1px solid black;
+  }
+</style>
