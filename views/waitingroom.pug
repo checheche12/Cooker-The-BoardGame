@@ -1,10 +1,12 @@
-<div>준비가 완료된 유저의 수 : </div><div id="readyuser">#{roomWaitingUser}</div>
-<div>방에 접속한 유저의 수 : </div><div id="alluser">#{alluser}</div>
-<input type="button" id="readybutton" value = "not ready" state = "notready" onclick="readyorcancle()">
-<input type="button" id="back" value = "go to lobby" onclick="back()">
-<table>
-<tr>
-<textarea rows="20" cols="30" id="chat"></textarea><br>
-<input type="text" id="user"><input type="button" value="msg submit" onclick="sendMessage()">
-</tr>
-</table>
+<div style="width: 900px; height: 900px; border-radius:0.5em; padding:10px;" class="container bg-info">
+ <h1 style="align:center">Cooker the BoardGame</h1>
+  <div style="float:left">준비가 완료된 유저의 수 : </div><div style="float:left" id="readyuser">#{roomWaitingUser}</div><br>
+    <div style="float:left">방에 접속한 유저의 수 : </div><div style="float:left" id="alluser">#{alluser}</div>
+    <button type="button" class="close" aria-label="Close" id="back"  onclick="back()"><span aria-hidden="true">&times;</span></button><br>
+
+    <textarea style="width:70%; height:80%; margin:5px" disabled id="chat"></textarea><br>
+    <input style="width:63%; margin:5px" type="text" id="user">
+    <input class="btn btn-light" style="width:50px; height:28px;padding:0;" type="button" value="Send" onclick="sendMessage()">
+    <input type="button" id="readybutton" class="btn btn-dark" value = "I'm not ready" state = "notready" onclick="readyorcancle()">
+
+</div>

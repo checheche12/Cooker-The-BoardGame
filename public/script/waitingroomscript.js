@@ -34,10 +34,12 @@ function readyorcancle(){
   if($("#readybutton").attr("state") == "notready"){
     socket.emit("ready");
     $("#readybutton").attr("state","ready");
-    $("#readybutton").attr("value","ready");
+    $("#readybutton").attr("value","I'm ready!");
+    $("#readybutton").attr("class","btn btn-danger");
   }else if($("#readybutton").attr("state") == "ready"){
     socket.emit("readycancle");
     $("#readybutton").attr("state","notready");
-    $("#readybutton").attr("value","not ready");
+    $("#readybutton").attr("value","I'm not ready");
+    $("#readybutton").attr("class","btn btn-dark");
   }
 }
