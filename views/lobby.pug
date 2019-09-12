@@ -1,13 +1,17 @@
 body
-    <div style="width: 900px; height: 900px; border-radius:0.5em; padding:10px;" class="container bg-info">
-       <h1 style="align:center">Cooker the BoardGame</h1>
-        <div style="width:70%; height:80%;background-color: white;overflow: auto; float:left; margin:5px">
-          <ul class="list-group list-group-flush">
-            -for(property in roomList)
-              <li class="list-group-item list-group-item-action" id = "#{roomList[property]["roomNumber"]}" ondblclick="jointhisroom(this.id)"> #{roomList[property]["roomName"]} </li>
-          </ul>
+    <div style="width: 900px; height: 900px; background-color: aqua; padding:10px;">
+       <h1>Cooker the BoardGame</h1>
+        <div style="width:70%; height:80%;background-color: white;overflow: auto; float:left">
+            <table border="0">
+             -for(property in roomList)
+                <tr>
+                    <td><li> #{roomList[property]["roomName"]} </li></td>
+                    <td><button id = "#{roomList[property]["roomNumber"]}" onclick="jointhisroom(this.id)" > Enter This Room!</button></td>
+                </tr>
+
+            </table>
         </div>
-        <div style="width:25%; height:80%;float:right; background-color: white; overflow:auto;margin: 5px;">
+        <div style="width:28%; height:80%;float:right; background-color: white; overflow:auto">
             <table>
                  -for(property in userList)
                     <tr>
@@ -15,10 +19,9 @@ body
                     </tr>
             </table>
         </div>
-        <br>
         <div style="float: left">
             p Now playing : <aa>#{nowPlayRoomCount}</aa>
         </div>
-        <div style="float: right; padding:5px"><button class="btn btn-light" "id="makeroom" onclick="makeroom()">방 만들기</button></div>
+        <div style="float: right"><button id="makeroom" onclick="makeroom()">방 만들기</button></div>
 
     </div>
