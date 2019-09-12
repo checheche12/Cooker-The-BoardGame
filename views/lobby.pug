@@ -1,15 +1,28 @@
 body
-  p #{roomCount} 개의 방이 현재 개설되어 있습니다.
-  p #{nowPlayRoomCount} 개의 게임이 현재 플레이 되고 있습니다.
-  <table>
-    -for(property in roomList)
-      <tr>
-        <td><li> #{roomList[property]["roomName"]} </li></td>
-        <td><button id = "#{roomList[property]["roomNumber"]}" onclick="jointhisroom(this.id)" > Enter This Room!</button></td>
-      </tr>
+    <div style="width: 900px; height: 900px; background-color: aqua; padding:10px;">
+       <h1>Cooker the BoardGame</h1>
+        <div style="width:70%; height:80%;background-color: white;overflow: auto; float:left">
+            <table border="0">
+             -for(property in roomList)
+                <tr>
+                    <td><li> #{roomList[property]["roomName"]} </li></td>
+                    <td><button id = "#{roomList[property]["roomNumber"]}" onclick="jointhisroom(this.id)" > Enter This Room!</button></td>
+                </tr>
+            
+            </table>
+        </div>
+        <div style="width:28%; height:80%;float:right; background-color: white; overflow:auto">
+            <table>
+                 -for(property in userList)
+                    <tr>
+                        <td><li> #{property} </li></td>
+                    </tr>
+            </table>
+        </div>
+        <div style="float: left">
+            p Now playing : <aa>#{nowPlayRoomCount}</aa>    
+        </div>
+        <div style="float: right"><button id="makeroom" onclick="makeroom()">방 만들기</button></div>
+        
+    </div>
 
-
-  <tr>
-    <td><button id="makeroom" onclick="makeroom()"> makeroom </button></td>
-  </tr>
-  </table>
