@@ -30,3 +30,22 @@ socket.on('yourturn', function (data) {
 socket.on('endturn', function (data) {
   reset();
 });
+
+function diceplay(){
+  socket.emit("playgamemessage",{message:"2"});
+}
+
+socket.on('playgrounddata',function(data){
+  var boardData = data["playgrounddata"];
+  for(var i = 0;i<boardData.length;i++){
+    for(var j = 0;j<boardData[i].length;j++){
+      if(boardData[i][j].user != "" ){
+        $("td[row="+i+"][col="+j+"]").text( boardData[i][j].user.substring(0,2) );
+      }
+    }
+  }
+});
+
+socket.on('playerdata',function(data){
+  console.log(data["player"]);
+});
