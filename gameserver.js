@@ -66,6 +66,44 @@ function gameBoard(_roomNumber ,_playUserCount){
   this.userOrderCount = 0;
 }
 
+/*
+  긴 배열 하나는 재료 0과 초급 완성품 1, 중급 완성품 2, 고급 완성품 3 으로 이루어져있다.
+*/
+
+const missionEasyArray = [
+  [[0,"apple"],[0,"wheat"],[0,"honey"],[1,"applepie"]],
+  [[0,"watermelon"],[0,"cider"],[0,"sugar"],[1,"watermelonsalad"]],
+  [[0,"fish"],[0,"soy"],[0,"salt"],[0,"fishroast"]]
+];
+
+const missionMiddleArray = [
+  [[0,"wheat"],[0,"cheese"],[0,"honey"],[0,"apple"],[2,"gorgonzola"]],
+  [[0,"fish"],[0,"sugar"],[0,"honey"],[0,"soy"],[2,"honeyfish"]],
+  [[0,"watermelon"],[0,"apple"],[0,"salt"],[0,"sugar"],[2,"fruitsalad"]]
+];
+
+const missionHardArray = [
+  [[0,"wheat"],[0,"salt"],[0,"soy"],[0,"aplle"],[0,"cider"],[3,"spaghetti"]],
+  [[0,"fish"],[0,"watermelon"],[0,"apple"],[0,"wheat"],[0,"salt"],[3,"fruitfishdish"]]
+];
+
+function missionCard(_cardNumber){
+  this.cardNumber = _cardNumber;
+  this.easyCard = null;
+  this.middleCard = null;
+  this.hardCard = null;
+}
+
+missionCard.prototype.getNewMissionCard = function(){
+  // 미션 카드를 새로 받아온다.
+  var easy = Math.floor(Math.random() * missionEasyArray.length);
+  var middle = Math.floor(Math.random() * missionMiddleArray.length);
+  var hard = Math.floor(Math.random() * missionHardArray.length);
+  this.easyCard = missionEasyArray[easy];
+  this.middleCard = missionMiddleArray[middle];
+  this.hardCard = missionHardArray[hard];
+}
+
 // 게임판을 초기화 하는 함수
 gameBoard.prototype.gameBoardInit = function(){
   // 게임 보드판을 12 * 12 로 초기화한다.
@@ -80,15 +118,47 @@ gameBoard.prototype.gameBoardInit = function(){
   // 순서를 기록할 리스트를 만든 뒤 소켓 아이디를 넣는다.
   for(sID in nowPlayRoomList[this.roomNumber]["roomUserList"]){
     var inventory = new Array();
-    this.userOrder.push({socketID:sID,userMissionCard:{},userInventroy:inventory});
+    var misCard = new missionCard(0);
+    misCard.getNewMissionCard();
+    this.userOrder.push({socketID:sID,userMissionCard:misCard,userInventroy:inventory});
   }
+
 
   for(var i = 0; i<this.userOrder.length;i++){
+    //유저의 위치를 결정한다.
+    var randomPosition = Math.floor(Math.random() * 12*12);
+    var user_col = randomPosition%12;
+    var user_row = parseInt(randomPosition/12);
+    if(this.playGround[user_row][user_col].user == "" ){
+      this.playGround[user_row][user_col].user = this.userOrder[i].socketID;
+    }else{
+      i-=1;
+      continue;
+    }
 
   }
 
-  this.gameBoardNoticePlayersTurn();
+  this.gameBoardFoodRestore();
+
+
+  // 게임 보드의 모든 상태를 모든 유저에게 보내서 랜더링 할 수 있게 해 준다.
+  // 각 유저별로 보내야 하는 데이터와 모두에게 보내야하는 데이터를 따로 관리하자.
+  // 모든 유저가 보아야하는것은 판의 상태 (어떤 음식이 떨어져 있는가, 어떤 유저가 어떤 칸에 있는가 에 관한 정보)
+
+  var that = this;
+  setTimeout(function(){
+    that.gameBoardSendBoardData();
+    that.gameBoardNoticePlayersTurn();
+    that.gameBoardSendOneUser();
+  },2000);
+  // 개인의 유저만 보여야하는 것은 미션카드. 자신의 인벤토리
+
   // 게임 보드를 초기화하고 처음 유저에게 신호를 보낸다.
+}
+
+gameBoard.prototype.gameBoardFoodRestore = function(){
+  // 음식재료를 맵에 새로 만드는 코드
+
 }
 
 gameBoard.prototype.gameBoardNoticePlayersTurn = function(){
@@ -110,6 +180,18 @@ gameBoard.prototype.gameBoardDicePlay = function(){
 gameBoard.prototype.gameBoardMovePlay = function(){
   // 주사위 결과를 반환 한 후 이동 처리
 };
+
+gameBoard.prototype.gameBoardSendBoardData = function(){
+  // 게임 판의 정보를 전송하는(모든 유저가 알아야하는 정보) 를 모든 유저에게 전송
+  io.to(this.roomNumber).emit('playgrounddata',{playgrounddata:this.playGround});
+};
+
+gameBoard.prototype.gameBoardSendOneUser = function(socketID){
+  // 게임 판에서 오직 socketID 에 해당하는 유저의 정보를 알아햐 하는 것
+  for(var i = 0 ; i<this.userOrder.length;i++){
+    io.to(this.userOrder[i]["socketID"]).emit('playerdata',{player:this.userOrder[i]});
+  }
+}
 
 gameBoard.prototype.gameBoardEndTurn = function(){
   var playerSocketID = this.userOrder[this.userOrderCount]["socketID"];
@@ -203,6 +285,7 @@ io.on('connection', function (socket) {
       // 1. 대화(감정 표현만)
       // 2. 주사위 굴리기
       // 3. 캐릭터 이동
+      // 4. 특정 음식을 만들기 위해 요청
       // 그 외에 어떤 것이 있을까... 고민을 좀 해봐야겠다.
       // 모든 처리는 서버에서 담당하며 클라이언트에게는 메세지만 보낸다. 렌더링만 맡기고 모든 처리는 서버에서...
       // 로직은 유저의 roomNumber 를 가지고 와서 nowPlayRoomList 에서 해당하는 방을 찾는다
@@ -213,7 +296,7 @@ io.on('connection', function (socket) {
         // 맞다면 주사위 두개의 값을 랜덤으로 생성해서 리턴한다.
       }else if(data["message"]=="3"){
 
-      }else{
+      }else if(data["message"]=="4"){
         //...
       }
     });
